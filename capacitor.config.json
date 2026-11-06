@@ -2,13 +2,28 @@
   "appId": "com.reflo.app",
   "appName": "REFLO",
   "webDir": "www",
+  "appendUserAgent": "RefloNativeApp",
   "server": {
     "url": "https://reflohdc.netlify.app",
-    "cleartext": true
+    "cleartext": true,
+    "errorPath": "offline.html",
+    "allowNavigation": [
+      "*.paystack.co",
+      "*.paystack.com",
+      "checkout.paystack.com",
+      "*.supabase.co"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": true,
+      "backgroundColor": "#000000"
+    }
   },
   "android": {
     "allowMixedContent": true,
-    "captureInput": true,
+    "captureInput": false,
     "webContentsDebuggingEnabled": true
   }
 }
