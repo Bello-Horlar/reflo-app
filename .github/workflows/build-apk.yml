@@ -1,4 +1,4 @@
-name: Build REFLO Android APK
+name: Build REFLO Android App
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js 20
@@ -30,18 +30,50 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Grant Execute Permission to Gradle
+      - name: Inject REFLO Brand Icon (Replaces Default Capacitor Logo)
+        run: |
+          curl -s -L -o reflo_icon.png https://reflohdc.netlify.app/assets/images/Reflo-icon-512.png
+          for dir in android/app/src/main/res/mipmap-*; do
+            cp reflo_icon.png "$dir/ic_launcher.png"
+            cp reflo_icon.png "$dir/ic_launcher_round.png"
+            cp reflo_icon.png "$dir/ic_launcher_foreground.png"
+          done
+
+      - name: Configure Android Permissions & Keyboard Settings
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          
+          # Add Permissions: File Uploads, Camera, Vibration, and Push Notifications
+          sed -i '/<application/i \
+          <uses-permission android:name="android.permission.INTERNET" /> \
+          <uses-permission android:name="android.permission.VIBRATE" /> \
+          <uses-permission android:name="android.permission.CAMERA" /> \
+          <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> \
+          <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> \
+          <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />' $MANIFEST
+
+          # Enable Keyboard Suggestions & Clipboard
+          sed -i 's/android:windowSoftInputMode="adjustResize"/android:windowSoftInputMode="adjustResize|stateVisible"/g' $MANIFEST
+
+      - name: Grant Gradle Permissions
         run: |
           cd android
           chmod +x gradlew
 
-      - name: Build Debug APK
+      - name: Compile APK and Google Play AAB Bundle
         run: |
           cd android
           ./gradlew assembleDebug
+          ./gradlew bundleDebug
 
-      - name: Upload APK to Download
+      - name: Upload APK (For your phone)
         uses: actions/upload-artifact@v4
         with:
-          name: REFLO-APK-Package
+          name: REFLO-APK-Installable
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload AAB (For Google Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: REFLO-AAB-GooglePlay
+          path: android/app/build/outputs/bundle/debug/app-debug.aab
