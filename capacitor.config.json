@@ -1,0 +1,14 @@
+{
+  "appId": "com.reflo.app",
+  "appName": "REFLO",
+  "webDir": "www",
+  "server": {
+    "url": "https://reflohdc.netlify.app",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}￼Enter
