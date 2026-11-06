@@ -30,16 +30,27 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Inject REFLO Brand Icon (Replaces Default Capacitor Logo)
+      - name: Inject REFLO Brand Icon (Clean & No Duplicates)
         run: |
           curl -s -L -o reflo_icon.png https://reflohdc.netlify.app/assets/images/Reflo-icon-512.png
-          for dir in android/app/src/main/res/mipmap-*; do
+          
+          # 🟢 1. Inject into density folders ONLY (Prevents duplicate XML/PNG clash)
+          for dir in android/app/src/main/res/mipmap-*dpi; do
             cp reflo_icon.png "$dir/ic_launcher.png"
             cp reflo_icon.png "$dir/ic_launcher_round.png"
             cp reflo_icon.png "$dir/ic_launcher_foreground.png"
           done
 
-      - name: Configure Android Permissions & Keyboard Settings
+          # 🟢 2. Remove any accidental PNG inside anydpi-v26
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/*.png
+
+          # 🟢 3. Set adaptive icon background color to black
+          COLOR_FILE="android/app/src/main/res/values/ic_launcher_background.xml"
+          if [ -f "$COLOR_FILE" ]; then
+            sed -i 's/<color name="ic_launcher_background">.*<\/color>/<color name="ic_launcher_background">#000000<\/color>/g' "$COLOR_FILE"
+          fi
+
+      - name: Configure Android Permissions
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           
@@ -51,9 +62,6 @@ jobs:
           <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> \
           <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> \
           <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />' $MANIFEST
-
-          # Enable Keyboard Suggestions & Clipboard
-          sed -i 's/android:windowSoftInputMode="adjustResize"/android:windowSoftInputMode="adjustResize|stateVisible"/g' $MANIFEST
 
       - name: Grant Gradle Permissions
         run: |
