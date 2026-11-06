@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>No Internet Connection | REFLO</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, system-ui, sans-serif; }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 35px 24px;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+        .icon-bubble {
+            width: 80px;
+            height: 80px;
+            background: #eff6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.2rem;
+        }
+        h2 { font-size: 1.4rem; font-weight: 900; color: #0f172a; margin-bottom: 10px; }
+        p { font-size: 0.9rem; color: #64748b; line-height: 1.5; margin-bottom: 25px; }
+        .btn-retry {
+            width: 100%;
+            padding: 15px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        .tips {
+            margin-top: 25px;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 20px;
+            text-align: left;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+        .tips strong { color: #0f172a; display: block; margin-bottom: 6px; }
+        .tips li { list-style: none; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-bubble">📡</div>
+        <h2>No Internet Connection</h2>
+        <p>REFLO cannot reach the server right now. Please check your mobile data or Wi-Fi connection and tap below to retry.</p>
+        <button class="btn-retry" onclick="window.location.href='https://reflohdc.netlify.app'">🔄 Tap to Reconnect</button>
+        <div class="tips">
+            <strong>Quick Troubleshooting:</strong>
+            <ul>
+                <li>• Toggle Airplane mode on and off</li>
+                <li>• Check if mobile data or Wi-Fi is active</li>
+                <li>• Your account data and drafts are safe</li>
+            </ul>
+        </div>
+    </div>
+</body>
+  </html>
