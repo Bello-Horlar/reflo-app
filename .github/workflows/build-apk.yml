@@ -22,6 +22,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Download Brand Icon
+        run: |
+          curl -s -L -o www/Reflo-icon-512.png https://reflohdc.netlify.app/assets/images/Reflo-icon-512.png
+
       - name: Install Dependencies
         run: npm install
 
@@ -42,16 +46,14 @@ jobs:
 
       - name: Inject REFLO Brand Icon (Clean & No Duplicates)
         run: |
-          curl -s -L -o reflo_icon.png https://reflohdc.netlify.app/assets/images/Reflo-icon-512.png
-          
-          # Inject into resolution density folders only (avoids XML conflict)
+          # Copy icon into density folders only (avoids XML conflict)
           for dir in android/app/src/main/res/mipmap-*dpi; do
-            cp reflo_icon.png "$dir/ic_launcher.png"
-            cp reflo_icon.png "$dir/ic_launcher_round.png"
-            cp reflo_icon.png "$dir/ic_launcher_foreground.png"
+            cp www/Reflo-icon-512.png "$dir/ic_launcher.png"
+            cp www/Reflo-icon-512.png "$dir/ic_launcher_round.png"
+            cp www/Reflo-icon-512.png "$dir/ic_launcher_foreground.png"
           done
 
-          # Ensure no duplicate PNG exists inside anydpi-v26
+          # Clean anydpi-v26
           rm -f android/app/src/main/res/mipmap-anydpi-v26/*.png
 
           # Set adaptive icon background color to black
@@ -62,9 +64,9 @@ jobs:
 
       - name: Configure Android Permissions
         run: |
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          MANIFEST="android/app/src/main/Manifest.xml"
+          [ -f "$MANIFEST" ] || MANIFEST="android/app/src/main/AndroidManifest.xml"
           
-          # Add permissions for File Uploads, Camera, Vibration, and Push Notifications
           sed -i '/<application/i \
           <uses-permission android:name="android.permission.INTERNET" /> \
           <uses-permission android:name="android.permission.VIBRATE" /> \
