@@ -4,10 +4,11 @@
   "webDir": "www",
   "appendUserAgent": "RefloNativeApp",
   "server": {
-    "url": "https://reflohdc.netlify.app",
     "cleartext": true,
     "errorPath": "offline.html",
     "allowNavigation": [
+      "reflohdc.netlify.app",
+      "*.netlify.app",
       "*.paystack.co",
       "*.paystack.com",
       "checkout.paystack.com",
